@@ -1,0 +1,23 @@
+{
+  "name": "plant-grow-light",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [
+    "lightcontrol"
+  ],
+  "homepage": "https://github.com/instkffff/plant-grow-light#readme",
+  "bugs": {
+    "url": "https://github.com/instkffff/plant-grow-light/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/instkffff/plant-grow-light.git"
+  },
+  "license": "ISC",
+  "author": "NightCandle",
+  "type": "module",
+  "main": "lightControl.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
