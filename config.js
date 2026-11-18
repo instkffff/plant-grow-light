@@ -19,4 +19,19 @@ const G41 = 410
 const G42 = 420
 const G43 = 430
 
-export { S1, S2, S3, S4, G11, G12, G13, G21, G22, G23, G31, G32, G33, G41, G42, G43 }
+const mqttBroker = 'mqtt://192.168.50.127:1883';
+
+const reqWrite = '/neuron/system/write/req';
+
+const respWrite = '/neuron/system/write/resp';
+
+const main = '/neuron/system';
+
+
+export {
+    S1, S2, S3, S4,
+    G11, G12, G13, G21,
+    G22, G23, G31, G32,
+    G33, G41, G42, G43,
+    mqttBroker, reqWrite, respWrite, main
+}
