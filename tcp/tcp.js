@@ -73,9 +73,9 @@ function connectToServer(server) {
     let isReconnecting = false
 
     function doConnect() {
+        isReconnecting = false  // ★ 每次重连尝试都重置标志
         const socket = createConnection(server.port, server.host, () => {
             console.log(`Connected to ${server.name} (${server.host}:${server.port})`)
-            isReconnecting = false
         })
 
         server.socket = socket
