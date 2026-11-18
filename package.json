@@ -19,8 +19,5 @@
   "main": "lightControl.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "dependencies": {
-    "mqtt": "^5.16.1"
   }
 }
