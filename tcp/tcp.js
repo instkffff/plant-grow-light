@@ -1,26 +1,54 @@
 import { createConnection } from 'net'
+import { test, S1, S2, S3, S4 } from '../config.js'
 
-// 1. 定义服务器列表（带名称标识）
-const serverConfigs = [
-    { name: 'S1', host: '127.0.0.1', port: 6000, socket: null },
-    { name: 'S2', host: '127.0.0.1', port: 6001, socket: null },
-    { name: 'S3', host: '127.0.0.1', port: 6002, socket: null },
-    { name: 'S4', host: '127.0.0.1', port: 6003, socket: null }
-]
-
+// ── 配置 ──────────────────────────────────────────────────────────────────
 const RECONNECT_DELAY = 5000
 
-// 2. 发送缓冲区的通用函数（支持按名称如 'S1' 发送）
-function sendTo(target, buffer) {
-    // target 可以是名字（如 'S1'），也可以直接是配置对象，或者是数组下标
-    let server = null
+const TEST_SERVERS= [
+    { name: 'S1', host: '127.0.0.1', port: 6000 },
+    { name: 'S2', host: '127.0.0.1', port: 6001 },
+    { name: 'S3', host: '127.0.0.1', port: 6002 },
+    { name: 'S4', host: '127.0.0.1', port: 6003 }
+]
+
+const DEFAULT_SERVERS = [
+    { name: 'S1', host: S1, port: 4000 },
+    { name: 'S2', host: S2, port: 4000 },
+    { name: 'S3', host: S3, port: 4000 },
+    { name: 'S4', host: S4, port: 4000 }
+]
+
+// 根据 test 标志选择服务器列表（不再重新赋值）
+const serverConfigs = test === false
+    ? DEFAULT_SERVERS.map(s => ({ ...s, socket: null }))
+    : TEST_SERVERS.map(s => ({ ...s, socket: null }))
+
+// ── 工具函数 ──────────────────────────────────────────────────────────────
+
+/**
+ * 按名称、索引或对象本身查找服务器配置
+ * @param {string|number|object} target - 服务器名称('S1')、索引(0)或配置对象
+ * @returns {object|undefined}
+ */
+function resolveServer(target) {
     if (typeof target === 'string') {
-        server = serverConfigs.find(s => s.name === target.toUpperCase())
-    } else if (typeof target === 'number') {
-        server = serverConfigs[target]
-    } else {
-        server = target
+        return serverConfigs.find(s => s.name === target.toUpperCase())
     }
+    if (typeof target === 'number') {
+        return serverConfigs[target]
+    }
+    return target
+}
+
+// ── 发送 ──────────────────────────────────────────────────────────────────
+
+/**
+ * 向指定服务器发送缓冲区数据
+ * @param {string|number|object} target - 服务器名称、索引或配置对象
+ * @param {Buffer} buffer - 要发送的数据
+ */
+export function sendTo(target, buffer) {
+    const server = resolveServer(target)
 
     if (!server) {
         console.error(`Target server not found: ${target}`)
@@ -35,13 +63,16 @@ function sendTo(target, buffer) {
     }
 }
 
-// 3. 建立连接与断线重连逻辑
+// ── 连接管理 ──────────────────────────────────────────────────────────────
+
+/**
+ * 建立到单个服务器的连接，并处理断线自动重连
+ * @param {object} server - 服务器配置对象（含 name, host, port, socket）
+ */
 function connectToServer(server) {
     let isReconnecting = false
 
-    function connect() {
-        isReconnecting = false  // ← 关键：每次尝试连接时重置标志
-
+    function doConnect() {
         const socket = createConnection(server.port, server.host, () => {
             console.log(`Connected to ${server.name} (${server.host}:${server.port})`)
             isReconnecting = false
@@ -70,18 +101,17 @@ function connectToServer(server) {
     function scheduleReconnect() {
         if (isReconnecting) return
         isReconnecting = true
-        setTimeout(() => {
-            isReconnecting = false  // ← 在调用 connect 前重置
-            connect()
-        }, RECONNECT_DELAY)
+        setTimeout(doConnect, RECONNECT_DELAY)
     }
 
-    connect()
+    doConnect()
 }
 
-// 4. 启动所有服务器连接
-function startAllConnections() {
+/**
+ * 启动所有服务器连接
+ */
+export function startAllConnections() {
     serverConfigs.forEach(connectToServer)
 }
 
-export { sendTo, startAllConnections, serverConfigs }
+export { serverConfigs }
