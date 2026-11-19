@@ -6,11 +6,7 @@ port: 30000
 */
 
 import WebSocket from 'ws';
-
-import { createEventEmitter } from '../tool/event.js';
-
-// 创建事件发射器实例
-const emitter = createEventEmitter();
+import { emitter } from './eventList.js';
 
 const WS_URL = 'ws://127.0.0.1:30000';
 const RECONNECT_DELAY = 5000;
