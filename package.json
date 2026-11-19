@@ -19,5 +19,8 @@
   "main": "lightControl.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "ws": "^8.23.0"
   }
 }
