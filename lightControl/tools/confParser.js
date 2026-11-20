@@ -37,4 +37,3 @@ result sample
 */
 
 export { confParser };
-

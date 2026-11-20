@@ -37,4 +37,8 @@ function setPWM(channel, pwm) {
   return result;
 }
 
+/* console.log(setPWM(1, 125));
+
+<Buffer 00 10 00 0b 00 02 00 04 00 01 00 7d 00 13> */
+
 export { setPWM };

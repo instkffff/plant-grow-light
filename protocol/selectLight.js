@@ -35,4 +35,8 @@ function selLight(groupID) {
   return result;
 }
 
+/* console.log(selLight(110));
+
+<Buffer 00 10 00 09 00 02 00 04 00 00 00 6e 09 7e> */
+
 export { selLight };
