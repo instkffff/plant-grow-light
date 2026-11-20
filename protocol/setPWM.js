@@ -1,5 +1,3 @@
-import { crc } from '../tool/CRC.js';
-
 /* 
 设置组中设备某个通道的光强 
 
@@ -15,6 +13,9 @@ pwm 00 03 光强值 uint16
 modbus crc16 校验和
 
 */
+
+import { crc } from '../tool/CRC.js';
+
 
 function setPWM(channel, pwm) {
   const addr = 0x00;
