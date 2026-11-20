@@ -21,10 +21,28 @@ const G43 = 430
 
 const test = true
 
+const GT = ['ID', 'MODE', 'K', 'R', 'B', 'W', 'TIMESTAMP']
+
+const PLANT = [
+    { name: 'G11', keys: GT },
+    { name: 'G12', keys: GT },
+    { name: 'G13', keys: GT },
+    { name: 'G21', keys: GT },
+    { name: 'G22', keys: GT },
+    { name: 'G23', keys: GT },
+    { name: 'G31', keys: GT },
+    { name: 'G32', keys: GT },
+    { name: 'G33', keys: GT },
+    { name: 'G41', keys: GT },
+    { name: 'G42', keys: GT },
+    { name: 'G43', keys: GT },
+]
+
 export {
     S1, S2, S3, S4,
     G11, G12, G13, G21,
     G22, G23, G31, G32,
     G33, G41, G42, G43,
-    test
+    test,
+    PLANT
 }
