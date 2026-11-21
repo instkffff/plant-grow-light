@@ -1,17 +1,25 @@
 import { emitter } from '../ws/eventList.js';
 import { updateDB } from './dataflow/uptadeDB.js';
+import { write } from './dataflow/write.js';
+import { bridge } from './dataflow/bridge.js';
+import { read } from './dataflow/read.js';
+
+
 
 function processMessage(data) {
-    console.log('[ws] received:', JSON.parse(data));
+    
     const message = JSON.parse(data);
     updateDB(message);
 
     switch (message['func']) {
         case 'read':
+            read(message);
             break;
         case 'bridge':
+            bridge(message);
             break;
         case 'write':
+            write(message);
             break;
         default:
             console.log('default');
