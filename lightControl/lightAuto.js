@@ -10,6 +10,7 @@ import { groupMap } from '../config.js';
 import { send } from '../ws/wsClient.js';
 
 function sendMsg (r, b, w, group) {
+    console.log(r, b, w, group);
     ['R', 'B', 'W'].forEach((tag, i) =>
         send({ func: 'write', node: 'PLANT', group, tag, value: [r, b, w][i] })
     );
@@ -55,7 +56,7 @@ function Lset( group, r, b, w ){
     }
 }
 
-function lightAuto( group ) {
+async function lightAuto( group ) {
     const MODE = getValue('PLANT', group, 'MODE');
     const confID = String(getValue('PLANT', group, 'ID')).padStart(4, '0');
     const tstart = getValue('PLANT', group, 'TIMESTAMP');
@@ -67,9 +68,9 @@ function lightAuto( group ) {
     }
 
     if (MODE === 1) {
-        const { r, b, w } = calPWM( confID, tstart, tnow );
+        const { r, b, w } = await calPWM( confID, tstart, tnow );
         Lset( group, r, b, w );
-        sendMsg( r, b, w );
+        sendMsg( r, b, w, group );
     } else {
         return;
     }

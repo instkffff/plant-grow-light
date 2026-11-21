@@ -16,8 +16,12 @@ const rows = ['1', '2', '3', '4'];
 const cols = ['1', '2', '3'];
 rows.forEach(r => {
     cols.forEach(c => {
-        setInterval(() => {
-            lightAuto(`G${r}${c}`);
+        setInterval(async () => {
+            try {
+                await lightAuto(`G${r}${c}`);
+            } catch (err) {
+                console.error(`lightAuto error for G${r}${c}:`, err);
+            }
         }, 60000);
     });
 });
