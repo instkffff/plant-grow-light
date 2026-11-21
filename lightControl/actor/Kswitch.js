@@ -6,27 +6,61 @@ import { timeParser, getCurrentTimestamp } from '../tools/timeParser.js';
 
 import { send } from '../../ws/wsClient.js';
 
-const S1bus = busQueues[0];
-const S2bus = busQueues[1];
-const S3bus = busQueues[2];
-const S4bus = busQueues[3];
+import { getValue } from '../../sqlite/read.js';
 
-const BusList = [S1bus, S2bus, S3bus, S4bus];
+import { selLight } from '../../protocol/selectLight.js';
+import { setPWM } from '../../protocol/setPWM.js';
 
-function sendMsgTime (Y, M, D, H, MM, group ) {
-    ['Y', 'M', 'D', 'HH', 'MM' ].forEach((tag, i) =>
-        send({ func: 'write', node: 'PLANT', group, tag, value: [Y, M, D, H, MM][i] })
-    );
-}
-
-function Kswitch( message ) {
+function Kswitch(message) {
     const { system, groupID } = groupDiv(message);
-    const timestamp = getCurrentTimestamp()
     const group = message['group'];
+    const bus = busQueues[system - 1];
 
-    updateValue('PLANT', group, 'TIMESTAMP', timestamp);
+    const R = getValue('PLANT', group, 'R');
+    const B = getValue('PLANT', group, 'B');
+    const W = getValue('PLANT', group, 'W');
+    const MODE = getValue('PLANT', group, 'MODE');
 
-    const { Y, M, D, H, MM } = timeParser(timestamp);
-    sendMsgTime(Y, M, D, H, MM, group);
+    if (message['value'] === 1) {
+        if (MODE === 0) {
+            if (groupID.length === 2) {
+                const RBGroup = selLight(groupID[1]);
+                const WGroup = selLight(groupID[0]);
+                bus.add(RBGroup);
+                bus.add(setPWM(1, R));
+                bus.add(RBGroup);
+                bus.add(setPWM(2, B));
+                bus.add(WGroup);
+                bus.add(setPWM(1, W));
+            } else {
+                const WGroup = selLight(groupID[0]);
+                bus.add(WGroup);
+                bus.add(setPWM(1, W));
+            }
+        } else {
+            const timestamp = getCurrentTimestamp();
+            updateValue('PLANT', group, 'TIMESTAMP', timestamp);
+            const { Y, M, D, H, MM } = timeParser(timestamp);
+            ['Y', 'M', 'D', 'HH', 'MM'].forEach((tag, i) =>
+                send({ func: 'write', node: 'PLANT', group, tag, value: [Y, M, D, H, MM][i] })
+            );
+        }
+    } else {
+        if (groupID.length === 2) {
+            const RBGroup = selLight(groupID[1]);
+            const WGroup = selLight(groupID[0]);
+            bus.add(RBGroup);
+            bus.add(setPWM(1, 0));
+            bus.add(RBGroup);
+            bus.add(setPWM(2, 0));
+            bus.add(WGroup);
+            bus.add(setPWM(1, 0));
+        } else {
+            const WGroup = selLight(groupID[0]);
+            bus.add(WGroup);
+            bus.add(setPWM(1, 0));
+        }
+    }
 }
+
 export { Kswitch };
