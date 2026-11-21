@@ -3,24 +3,24 @@ import { createServer } from 'net'
 const HOST = '127.0.0.1'
 const PORTS = [6000, 6001, 6002, 6003]
 
-function handleSocket(socket) {
-    console.log(`Client connected: ${socket.remoteAddress}:${socket.remotePort}`)
+function handleSocket(socket, port) {
+    console.log(`[${port}] Client connected: ${socket.remoteAddress}:${socket.remotePort}`)
 
     socket.on('data', (buffer) => {
-        console.log(`Received buffer (${buffer.length} bytes):`, buffer)
+        console.log(`[${port}] Received buffer (${buffer.length} bytes):`, buffer)
     })
 
     socket.on('end', () => {
-        console.log(`Client disconnected: ${socket.remoteAddress}:${socket.remotePort}`)
+        console.log(`[${port}] Client disconnected: ${socket.remoteAddress}:${socket.remotePort}`)
     })
 
     socket.on('error', (err) => {
-        console.error('Socket error:', err.message)
+        console.error(`[${port}] Socket error:`, err.message)
     })
 }
 
 function startServer(port) {
-    const server = createServer(handleSocket)
+    const server = createServer((socket) => handleSocket(socket, port))
 
     server.on('error', (err) => {
         console.error(`Server error on port ${port}:`, err.message)

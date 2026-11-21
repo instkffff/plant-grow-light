@@ -11,15 +11,13 @@ const G21 = [210, 211]
 const G22 = [220, 221]
 const G23 = [230, 231]
 
-const G31 = 310
-const G32 = 320
-const G33 = 330
+const G31 = [310]
+const G32 = [320]
+const G33 = [330]
 
-const G41 = 410
-const G42 = 420
-const G43 = 430
-
-const test = true
+const G41 = [410]
+const G42 = [420]
+const G43 = [430]
 
 const GT = ['ID', 'MODE', 'K', 'R', 'B', 'W', 'TIMESTAMP']
 
@@ -38,11 +36,25 @@ const PLANT = [
     { name: 'G43', keys: GT },
 ]
 
+const groupMap = {
+    'G11': G11,
+    'G12': G12,
+    'G13': G13,
+    'G21': G21,
+    'G22': G22,
+    'G23': G23,
+    'G31': G31,
+    'G32': G32,
+    'G33': G33,
+    'G41': G41,
+    'G42': G42,
+    'G43': G43,
+}
+
 export {
     S1, S2, S3, S4,
     G11, G12, G13, G21,
     G22, G23, G31, G32,
     G33, G41, G42, G43,
-    test,
-    PLANT, GT
+    PLANT, GT, groupMap
 }

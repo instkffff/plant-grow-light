@@ -1,29 +1,23 @@
 import { startAllConnections } from './tcp/tcp.js';
-
 import { wsClientInit, send } from './ws/wsClient.js';
-
 import { eventListener } from './lightControl/main.js';
-
 import { busQueues, busWorker } from './queue/queenList.js';
+import { lightAuto } from './lightControl/lightAuto.js';
 
-startAllConnections()
-
+startAllConnections();
 wsClientInit();
-
 eventListener();
 
-setInterval(() => {
-    busWorker(busQueues[0], 'S1');
-}, 1000);
+busQueues.forEach((queue, i) => {
+    setInterval(() => busWorker(queue, `S${i + 1}`), 100);
+});
 
-setInterval(() => {
-    busWorker(busQueues[1], 'S2');
-}, 1000);
-
-setInterval(() => {
-    busWorker(busQueues[2], 'S3');
-}, 1000);
-
-setInterval(() => {
-    busWorker(busQueues[3], 'S4');
-}, 1000);
+const rows = ['1', '2', '3', '4'];
+const cols = ['1', '2', '3'];
+rows.forEach(r => {
+    cols.forEach(c => {
+        setInterval(() => {
+            lightAuto(`G${r}${c}`);
+        }, 60000);
+    });
+});

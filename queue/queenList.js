@@ -1,4 +1,5 @@
 import { newQueue } from './queue.js';
+import { startAllConnections, sendTo } from '../tcp/tcp.js';
 
 const busQueues = [
     newQueue({ name: 'bus1', maxSize: 60, defaultTimeout: 10000 }),
@@ -12,7 +13,7 @@ const busQueues = [
 function busWorker(queue, client) {
     const mission = queue.work();
     if (mission) {
-        console.log(mission, client);
+        sendTo(client, mission);
     }
 }
 

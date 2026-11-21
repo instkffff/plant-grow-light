@@ -1,3 +1,10 @@
+import { Bset } from '../actor/Bset.js';
+import { Rset } from '../actor/Rset.js';
+import { Wset } from '../actor/Wset.js';
+
+import { Kswitch } from '../actor/Kswitch.js';
+
+
 /* 
 
 bridge and read message
@@ -37,15 +44,19 @@ function bridge(message) {
             break;
         case 'K':
             console.log('K:', message.value);
+            Kswitch(message);
             break;
         case 'R':
             console.log('R:', message.value);
+            Rset(message);
             break;
         case 'B':
             console.log('B:', message.value);
+            Bset(message);
             break;
         case 'W':
             console.log('W:', message.value);
+            Wset(message);
             break;
         default:
             console.log('default');
