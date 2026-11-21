@@ -1,57 +1,46 @@
 import { createConnection } from 'net'
-import { test, S1, S2, S3, S4 } from '../config.js'
+import { S1, S2, S3, S4 } from '../config.js'
 
 // ── 配置 ──────────────────────────────────────────────────────────────────
 const RECONNECT_DELAY = 5000
 
-const TEST_SERVERS= [
-    { name: 'S1', host: '127.0.0.1', port: 6000 },
-    { name: 'S2', host: '127.0.0.1', port: 6001 },
-    { name: 'S3', host: '127.0.0.1', port: 6002 },
-    { name: 'S4', host: '127.0.0.1', port: 6003 }
+/* const serverConfigs = [
+    { name: 'S1', host: S1, port: 4000, socket: null },
+    { name: 'S2', host: S2, port: 4000, socket: null },
+    { name: 'S3', host: S3, port: 4000, socket: null },
+    { name: 'S4', host: S4, port: 4000, socket: null }
 ]
-
-const DEFAULT_SERVERS = [
-    { name: 'S1', host: S1, port: 4000 },
-    { name: 'S2', host: S2, port: 4000 },
-    { name: 'S3', host: S3, port: 4000 },
-    { name: 'S4', host: S4, port: 4000 }
+ */
+const serverConfigs = [
+    { name: 'S1', host: '127.0.0.1', port: 6000, socket: null },
+    { name: 'S2', host: '127.0.0.1', port: 6001, socket: null },
+    { name: 'S3', host: '127.0.0.1', port: 6002, socket: null },
+    { name: 'S4', host: '127.0.0.1', port: 6003, socket: null }
 ]
-
-// 根据 test 标志选择服务器列表（不再重新赋值）
-const serverConfigs = test === false
-    ? DEFAULT_SERVERS.map(s => ({ ...s, socket: null }))
-    : TEST_SERVERS.map(s => ({ ...s, socket: null }))
 
 // ── 工具函数 ──────────────────────────────────────────────────────────────
 
 /**
- * 按名称、索引或对象本身查找服务器配置
- * @param {string|number|object} target - 服务器名称('S1')、索引(0)或配置对象
+ * 按名称查找服务器配置
+ * @param {string} name - 服务器名称('S1')
  * @returns {object|undefined}
  */
-function resolveServer(target) {
-    if (typeof target === 'string') {
-        return serverConfigs.find(s => s.name === target.toUpperCase())
-    }
-    if (typeof target === 'number') {
-        return serverConfigs[target]
-    }
-    return target
+function resolveServer(name) {
+    return serverConfigs.find(s => s.name === name.toUpperCase())
 }
 
 // ── 发送 ──────────────────────────────────────────────────────────────────
 
 /**
  * 向指定服务器发送缓冲区数据
- * @param {string|number|object} target - 服务器名称、索引或配置对象
+ * @param {string} name - 服务器名称('S1')
  * @param {Buffer} buffer - 要发送的数据
  */
-export function sendTo(target, buffer) {
-    const server = resolveServer(target)
+function sendTo(name, buffer) {
+    const server = resolveServer(name)
 
     if (!server) {
-        console.error(`Target server not found: ${target}`)
+        console.error(`Server not found: ${name}`)
         return
     }
 
@@ -110,8 +99,8 @@ function connectToServer(server) {
 /**
  * 启动所有服务器连接
  */
-export function startAllConnections() {
+function startAllConnections() {
     serverConfigs.forEach(connectToServer)
 }
 
-export { serverConfigs }
+export { startAllConnections, sendTo }

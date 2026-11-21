@@ -44,5 +44,5 @@ export {
     G22, G23, G31, G32,
     G33, G41, G42, G43,
     test,
-    PLANT
+    PLANT, GT
 }
