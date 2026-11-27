@@ -4,19 +4,13 @@ import { S1, S2, S3, S4 } from '../config.js'
 // ── 配置 ──────────────────────────────────────────────────────────────────
 const RECONNECT_DELAY = 5000
 
-/* const serverConfigs = [
-    { name: 'S1', host: S1, port: 4000, socket: null },
-    { name: 'S2', host: S2, port: 4000, socket: null },
-    { name: 'S3', host: S3, port: 4000, socket: null },
-    { name: 'S4', host: S4, port: 4000, socket: null }
-]
- */
 const serverConfigs = [
-    { name: 'S1', host: '127.0.0.1', port: 6000, socket: null },
-    { name: 'S2', host: '127.0.0.1', port: 6001, socket: null },
-    { name: 'S3', host: '127.0.0.1', port: 6002, socket: null },
-    { name: 'S4', host: '127.0.0.1', port: 6003, socket: null }
+    { name: 'S1', host: S1, port: 6000, socket: null },
+    { name: 'S2', host: S2, port: 6001, socket: null },
+    { name: 'S3', host: S3, port: 6002, socket: null },
+    { name: 'S4', host: S4, port: 6003, socket: null }
 ]
+
 
 // ── 工具函数 ──────────────────────────────────────────────────────────────
 
